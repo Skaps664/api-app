@@ -23,7 +23,7 @@ const server = http.createServer((req, res) => {
   var method = req.method.toLowerCase();
 
   //Get the headers as an object
-  var header = req.headers;
+  var headers = req.headers;
 
   //Get the payload, if any
   var decoder = new stringDecoder("utf-8");
@@ -52,18 +52,20 @@ const server = http.createServer((req, res) => {
     chosenHandler(data, (statusCode, payload) => {
       //use the status code called by the handler, or default
       statusCode = typeof statusCode === "number" ? statusCode : 200;
+
       //use the payload callled back by the handler, or default to an empty object
       payload = typeof payload === "object" ? payload : {};
 
       //convert the payloac to a string
       var payloadString = JSON.stringify(payload);
+
+      //Send the response
+      res.writeHead(statusCode);
+      res.end(payloadString);
+
+      //Log the requests path
+      console.log("Returning thisa reponse: ", statusCode, payloadString);
     });
-
-    //Send the response
-    res.end("Hello, world!\n");
-
-    //Log the requests path
-    console.log("Request recieved with this payload: ", payload);
   });
 });
 
@@ -73,8 +75,8 @@ server.listen(3000, () => {
 });
 
 // Defining a request router
-
 var handlers = {};
+
 //sample handler
 handlers.sample = (data, callback) => {
   //callback a http status code and payload object
@@ -86,6 +88,7 @@ handlers.notFound = (data, callback) => {
   callback(404);
 };
 
+//Define the request router
 var router = {
   sample: handlers.sample,
 };
