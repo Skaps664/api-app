@@ -51,10 +51,10 @@ const server = http.createServer((req, res) => {
     // route the request to the handler specified in the router
     chosenHandler(data, (statusCode, payload) => {
       //use the status code called by the handler, or default
-      statusCode = typeof statusCode === "number" ? statusCode : 200;
+      statusCode = typeof statusCode == "number" ? statusCode : 200;
 
       //use the payload callled back by the handler, or default to an empty object
-      payload = typeof payload === "object" ? payload : {};
+      payload = typeof payload == "object" ? payload : {};
 
       //convert the payloac to a string
       var payloadString = JSON.stringify(payload);
